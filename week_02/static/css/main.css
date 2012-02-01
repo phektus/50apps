@@ -1,0 +1,26 @@
+form input[type=text] {
+	height: 20px;
+	border-radius: 5px;
+		moz-border-radius: 5px;
+		webkit-border-radius: 5px;
+}
+
+form input[type=submit] {
+	height: 30px;
+	width: 100px;
+	border-radius: 5px;
+		moz-border-radius: 5px;
+		webkit-border-radius: 5px;
+}
+
+#site {
+	width: 300px;
+}
+
+#term {
+	width: 200px;
+}
+
+#levels {
+	width: 125px;
+}

@@ -1,0 +1,10 @@
+application: 50apps-week02
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /static/
+  static_dir: static
+- url: /.*
+  script: script.py

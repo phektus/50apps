@@ -1,0 +1,45 @@
+import cgi
+import os
+import logging
+
+from google.appengine.api import users
+from google.appengine.ext import webapp
+from google.appengine.ext.webapp.util import run_wsgi_app
+from google.appengine.ext.webapp import template
+
+from crawler import search
+
+
+class MainPage(webapp.RequestHandler):
+    def get(self):
+
+        path = os.path.join(os.path.dirname(__file__), 'index.html')
+        self.response.out.write(template.render(path, {}))
+
+
+class Search(webapp.RequestHandler):
+    def post(self):
+    	site = self.request.get('site')
+    	term = self.request.get('term')
+    	levels = self.request.get('levels')
+    	
+    	results = search(site, term, levels)
+    	
+        template_values = {
+            'results': results
+        }
+
+        path = os.path.join(os.path.dirname(__file__), 'index.html')
+        self.response.out.write(template.render(path, template_values))    
+
+
+application = webapp.WSGIApplication(
+                                     [('/', MainPage),
+                                      ('/search', Search)],
+                                     debug=True)
+
+def main():
+    run_wsgi_app(application)
+
+if __name__ == "__main__":
+    main()
