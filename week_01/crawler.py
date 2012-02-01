@@ -5,48 +5,54 @@ import re
 def get_links(url, max_levels=5, current_level=1):
     print "fetching links for %s" % (url,)
     print "current level: %d, max levels: %d" % (current_level, max_levels)
-    links = []
+    results = []
     contents = ''
     page = None
     try:
         page = urllib2.urlopen(url)
     except Exception, e:
         print "Error fetching page: %s" % (e,)
-        return links
+        return results
 
     if page is None:
         print "No page document fetched, quitting"
-        return links
+        return results
 
     try:
         soup = BeautifulSoup(page.read())
     except Exception, e:
         print "Error reading page: %s" % (e,)
-        return links
+        return results
 
     links = soup.findAll('a')
-    print "links found: %d" % len(links)
-
-    if max_levels > current_level:
-        print "fetching sub links"
-        for link in links:
-            url = link.get('href')
-            if url:
-                links.extend(get_links(url, max_levels, current_level+1))
-    return links
+    if len(links):
+        urls = [link.get('href') for link in links if link]
+        # make sure links are unique
+        urls = list(set(urls))
+        total = len(urls)
+        print 'urls found: %d' % total
+        if current_level < max_levels:
+            print "deeper level available, crawling sub links"
+            for url in urls:
+                results.extend(get_links(url, max_levels=max_levels, current_level=current_level+1))
+                total -= 1
+                print 'links remaining: %d' % total
+    return results
 
 
 
 def main():
     url_to_parse = raw_input("URL to parse: ")
     if not url_to_parse:
-        print "No URL provided, quitting"
-        return
+        #print "No URL provided, quitting"
+        #return
+        url_to_parse = 'http://www.hackernews.com'
 
     search_string = raw_input("Search string: ")
     if not search_string:
-        print "No search string provided, quitting"
-        return
+        #print "No search string provided, quitting"
+        #return
+        search_string = 'python'
 
     levels = raw_input("Levels (default is 1): ")
     if not levels:
@@ -58,13 +64,13 @@ def main():
     print 'all links found:', links
     results = []
     for link in links:
-        url = link.get('href')
-        print 'processing url:', url
-        if url and url.find(search_string) != -1:
-            results.append(url)
-    
+        print 'processing link:', link
+        if link and link.find(search_string) != -1:
+            results.append(link)
 
     if results:
+        # make sure results are unique
+        results = list(set(results))
         print "Results found:"
         for result in results:
             print "* %s" % (result,)
