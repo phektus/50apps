@@ -1,3 +1,5 @@
+# script.py by Arbie Samong
+
 import cgi
 import os
 import logging
@@ -19,6 +21,7 @@ class MainPage(webapp.RequestHandler):
 
 class Search(webapp.RequestHandler):
     def post(self):
+        action = self.request.get('action') or ''
     	site = self.request.get('site')
     	term = self.request.get('term')
     	levels = self.request.get('levels')
@@ -26,7 +29,8 @@ class Search(webapp.RequestHandler):
     	results = search(site, term, levels)
     	
         template_values = {
-            'results': results
+            'results': results,
+            'action': action
         }
 
         path = os.path.join(os.path.dirname(__file__), 'index.html')

@@ -13,13 +13,21 @@
         <input id="site" type="text" name="site" value="" placeholder="http://www.hackernews.com" />
         <input id="term" type="text" name="term" value="" placeholder="Enter your search term here" />
         <input id="levels" type="text" name="levels" value="" placeholder="Levels (default is 1)" />
+        <input name="action" type="hidden" value="search" />
         <input type="submit" value="Search" />
       </div>
     </form>
-
+  </center> 
+  {% if action %}
     {% if results %}
-        {{ results }}
+      <ul>
+        {% for result in results %}
+          <li>{{ result }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+        <p>No results found</p>    
     {% endif %}
-    </center>
+  {% endif %}    
   </body>
 </html>
