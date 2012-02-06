@@ -113,10 +113,12 @@ def search(url):
         logging.info("found %d uniques" % len(wordlist))
         occurances = dict([(unique, wordlist.count(unique)) for unique in uniques])
         logging.info("occurances: %ss" % str(occurances)) 
-        counts = sorted(occurances.iteritems(), key=operator.itemgetter(1))
-        counts.reverse()
-        logging.info("sorted: %ss" % str(counts)) 
-        wordcount = dict(counts)
+        sorted_wordlist = sorted(occurances.iteritems(), key=operator.itemgetter(1))
+        logging.info("sorted: %s" % str(sorted_wordlist)) 
+        wordcount = sorted_wordlist[-10:]
+        logging.info("wordcount: %s" % str(wordcount)) 
+        wordcount.reverse()
+        logging.info("wordcount: %s" % str(wordcount)) 
     
     return wordcount
 
