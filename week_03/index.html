@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/static/css/main.css">
+  <title>50Apps Week02</title>
+  </head>
+  <body>
+    <center>
+    <h3>50 Apps - Week 02</h3>
+    <form action="/search" method="post">
+      <div>
+        <input id="site" type="text" name="site" value="" placeholder="Enter a URL like http://www.hackernews.com" />
+        <input name="action" type="hidden" value="search" />
+        <input type="submit" value="Search URL" />
+      </div>
+    </form>
+  </center> 
+  {% if action %}
+    {% if results %}
+      <ul>
+        {% for item in results.items %}
+          <li>{{ item.0 }}: {{ item.1 }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+        <p>No results found</p>    
+    {% endif %}
+  {% endif %}    
+  </body>
+</html>
