@@ -124,10 +124,9 @@ def search(url):
         
         uniques = list(set(wordlist))
         # some filterings
-        uniques = [word.lower() for word in uniques if word not in BAD_WORDS]
         uniques = [''.join([c for c in s if c in ALLOWED_CHARS]) for s in uniques]
-        uniques = [word for word in uniques if not is_number(word)]
-        logging.info("found %d uniques" % len(wordlist))
+        uniques = [word.lower() for word in uniques if word.lower().strip() not in BAD_WORDS and not is_number(word)]
+        logging.info("found %d filtered uniques" % len(wordlist))
         
         occurances = dict([(unique, wordlist.count(unique)) for unique in uniques])
         logging.info("occurances: %ss" % str(occurances)) 
