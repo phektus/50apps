@@ -22,11 +22,12 @@ class MainPage(webapp.RequestHandler):
 class Search(webapp.RequestHandler):
     def post(self):
         action = self.request.get('action') or ''
-    	site = self.request.get('site')
+    	site = self.request.get('site') or ''
     	
     	results = search(site)
     	
         template_values = {
+            'site': site,
             'results': results,
             'action': action
         }

@@ -5,7 +5,18 @@ import urllib2
 import re
 import logging
 import operator
+import string
 
+BAD_WORDS = ['a', 'an', 'the', 'on', 'in', 'for', 'and', 'to']
+ALLOWED_CHARS = string.letters + string.digits + ' '   
+
+def is_number(s):
+    """ determine if something is really a number """
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False     
 
 def get_page(url):
     """ grabs everything from a web page """
@@ -88,6 +99,7 @@ def search_links(url, term, levels):
     return results    
 
 def search(url):
+    """ get all word occurances in a page """
     if not url:
         return
     page = get_page(url)
@@ -109,16 +121,24 @@ def search(url):
         visibles = filter(visible, texts)
         wordlist = " ".join(["%s" % el for el in visibles]).split()
         logging.info("found %d words" % len(wordlist))
+        
         uniques = list(set(wordlist))
+        # some filterings
+        uniques = [word.lower() for word in uniques if word not in BAD_WORDS]
+        uniques = [''.join([c for c in s if c in ALLOWED_CHARS]) for s in uniques]
+        uniques = [word for word in uniques if not is_number(word)]
         logging.info("found %d uniques" % len(wordlist))
+        
         occurances = dict([(unique, wordlist.count(unique)) for unique in uniques])
         logging.info("occurances: %ss" % str(occurances)) 
+        
         sorted_wordlist = sorted(occurances.iteritems(), key=operator.itemgetter(1))
         logging.info("sorted: %s" % str(sorted_wordlist)) 
+        
         wordcount = sorted_wordlist[-10:]
         logging.info("wordcount: %s" % str(wordcount)) 
         wordcount.reverse()
-        logging.info("wordcount: %s" % str(wordcount)) 
+        logging.info("wordcount : %s" % str(wordcount)) 
     
     return wordcount
 

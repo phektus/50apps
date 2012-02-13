@@ -2,30 +2,48 @@
 <html lang="en">
   <head>
   <meta charset="utf-8">
-  <link rel="stylesheet" href="/static/css/main.css">
   <title>50Apps Week02</title>
+
+  <link rel="stylesheet" href="/static/css/main.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"> </script>
+  <script src="/static/js/jqBarGraph.1.1.min.js"> </script>
+  
   </head>
   <body>
     <center>
-    <h3>50 Apps - Week 02</h3>
-    <form action="/search" method="post">
-      <div>
-        <input id="site" type="text" name="site" value="" placeholder="Enter a URL like http://www.hackernews.com" />
-        <input name="action" type="hidden" value="search" />
-        <input type="submit" value="Search URL" />
-      </div>
-    </form>
-  </center> 
-  {% if action %}
-    {% if results %}
-      <ul>
-        {% for result in results %}
-          <li>{{ result.0 }}: {{ result.1 }}</li>
-        {% endfor %}
-      </ul>
-    {% else %}
-        <p>No results found</p>    
-    {% endif %}
-  {% endif %}    
+      <h3>50 Apps - Week 02</h3>
+      <form action="/search" method="post">
+        <div>
+          <input id="site" type="text" name="site" value="{{ site }}" placeholder="Enter a URL like http://www.hackernews.com" />
+          <input name="action" type="hidden" value="search" />
+          <input type="submit" value="Search URL" />
+        </div>
+      </form>
+    
+
+      {% if action %}
+        {% if results %}
+          <div id="mygraph"></div>
+          <script>
+            var wordgraph = new Array( {% for result in results %} 
+              [{{ result.1 }}, '{{ result.0 }}']{% if not forloop.last %},{% endif %}
+              {% endfor %}
+            );
+            $("#mygraph").jqBarGraph({
+              data: wordgraph,
+              width: 500,
+              colors: ['#663333','#CC9966','#666633', '#CCCC66', '#FFFFCC'],
+              color: '#1A2944',
+              barSpace: 15,
+              title: '<h3>Word distribution</h3>'
+            });
+
+          </script>
+        {% else %}
+            <h4>No results found</h4>    
+        {% endif %}
+      {% endif %}    
+    </center> 
+    
   </body>
 </html>
